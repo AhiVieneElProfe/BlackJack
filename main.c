@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-int main(int argc, const char * argv[]) {
+int main() {
     srand(time(NULL));
     
     char respuesta;
@@ -19,7 +19,7 @@ int main(int argc, const char * argv[]) {
     // Posibles valores:
     // 2,3,4,5,6,7,8,9,10,  J,  Q,  K,  A
     // 2,3,4,5,6,7,8,9,10, 11, 12, 13, 14
-    int min = 10;
+    int min = 2;
     int max = 14;
     int valor_as = 0;
     int valor1 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
