@@ -18,25 +18,53 @@ int main() {
     char carta2=' ';
     // Posibles valores:
     // 2,3,4,5,6,7,8,9,10,  J,  Q,  K,  A
-    // 2,3,4,5,6,7,8,9,10, 11, 12, 13, 14
+    int palo[13] = {2,3,4,5,6,7,8,9,10, 11, 12, 13, 14};
+    int baraja[52];
+    int k =0;
+    
+    //Llenar baraja
+    for(int i=0; i<4; i++){
+        for(int j=0; j<13; j++){
+            baraja[k] = palo[j];
+            k++;
+        }
+    }
+    
+    
+    for(int i=0;i<52;i++){
+        printf("%d ", baraja[i]);
+        if(baraja[i] == 14)
+            printf("\n");
+    }
+    
+    
     int min = 2;
     int max = 14;
     int valor_as = 0;
+    
+    //Obtener primeras cartas
     int valor1 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
     int valor2 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+    int carta_extra = 0;
+    char carta_extra_ch = ' ';
     
-    if((valor1 == 14 && valor2 >9) || (valor1 > 9 && valor2 == 14)){
-        printf("\n!! Felicidades obtuviste un BlackJack!!");
+//    printf("valor1: %d \nvalor2: %d \n", valor1, valor2);
+    if((valor1 == 14 && valor2 >9 && valor2 < 14) || (valor1 < 14 && valor1 > 9 && valor2 == 14)){
+        printf("\n!! Felicidades obtuviste un BlackJack!!\n");
         return EXIT_SUCCESS;
     }
     
-    printf("\nTus cartas son: ");
+    printf("\nTu primer carta es: ");
     if(valor1 > 10){
         switch(valor1){
             case 11:
                 carta1 = 'J';
+                valor1 = 10;
+                break;
             case 12:
                 carta1 = 'Q';
+                valor1 = 10;
+                break;
             case 13:
                 carta1 = 'K';
                 valor1 = 10;
@@ -50,18 +78,24 @@ int main() {
                 valor1 = valor_as;
                 break;
         }
-        printf("%c", carta1);
+        printf("%c\n", carta1);
     }else{
-        printf("%d", valor1);
+        printf("%d\n", valor1);
     }
+
+     
     
-    printf(" y ");
-    if(valor2 > 10){
+    printf("Tu segunda carta es: ");
+     if(valor2 > 10){
         switch(valor2){
             case 11:
                 carta2 = 'J';
+                valor2 = 10;
+                break;
             case 12:
                 carta2 = 'Q';
+                valor2 = 10;
+                break;
             case 13:
                 carta2 = 'K';
                 valor2 = 10;
@@ -75,27 +109,198 @@ int main() {
                 valor2 = valor_as;
                 break;
         }
-        printf("%c", carta2);
+        printf("%c\n", carta2);
     }else{
-        printf("%d", valor2);
+        printf("%d\n", valor2);
     }
     
     
+    
     int suma = valor1 + valor2;
-    printf(" , la suma es: %d \n", suma);
+    printf("La suma es: %d \n", suma);
     
     do{
         fflush(stdin);
         printf("\nQuieres otra carta? \n");
         scanf(" %c", &respuesta);
         if (respuesta == 's' || respuesta == 'S') {
-//            printf("resp: %c", respuesta);
+            carta_extra = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+            printf("Tu carta es: ");
+            
+            if(carta_extra > 10){
+                switch(carta_extra){
+                    case 11:
+                        carta_extra_ch = 'J';
+                        carta_extra = 10;
+                        break;
+                    case 12:
+                        carta_extra_ch = 'Q';
+                        carta_extra = 10;
+                        break;
+                    case 13:
+                        carta_extra_ch = 'K';
+                        carta_extra = 10;
+                        break;
+                    case 14:
+                        carta_extra_ch = 'A';
+                        do{
+                            printf("!Obtuviste un As!, Que valor quieres para el As 1 u 11? \n");
+                            scanf("%d", &valor_as);
+                        }while(valor_as != 1 && valor_as != 11);
+                        carta_extra = valor_as;
+                        break;
+                }
+                printf("%c\n", carta_extra_ch);
+            }else{
+                printf("%d\n", carta_extra);
+            }
+            
+            suma = suma + carta_extra;
+            printf("La suma es: %d \n", suma);
+            
+            if(suma > 21){
+                printf("!PERDISTE!!! \n");
+                return EXIT_SUCCESS;
+            }
+            
         } else {
             break;
         }
     }while(1);
     
+    // Juego computadora
+    valor1 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+    valor2 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+    carta_extra = 0;
+    carta_extra_ch = ' ';
+
+//    printf("valor1: %d \nvalor2: %d \n", valor1, valor2);
+    if((valor1 == 14 && valor2 >9 && valor2 < 14) || (valor1 < 14 && valor1 > 9 && valor2 == 14)){
+        printf("\n!! Gano la computadora con un BlackJack!!\n");
+        return EXIT_SUCCESS;
+    }
+    int bandera_AS1 = 0;
+    int bandera_AS2 = 0;
+    
+    printf("\nPrimer carta de la computadora es: ");
+    if(valor1 > 10){
+        switch(valor1){
+            case 11:
+                carta1 = 'J';
+                valor1 = 10;
+                break;
+            case 12:
+                carta1 = 'Q';
+                valor1 = 10;
+                break;
+            case 13:
+                carta1 = 'K';
+                valor1 = 10;
+                break;
+            case 14:
+                carta1 = 'A';
+                bandera_AS1 = 1;
+                do{
+                    printf("!Obtuviste un As!, Que valor quieres para el As 1 u 11? \n");
+                    scanf("%d", &valor_as);
+                }while(valor_as != 1 && valor_as != 11);
+                valor1 = valor_as;
+                break;
+        }
+        printf("%c\n", carta1);
+    }else{
+        printf("%d\n", valor1);
+    }
     
     
+    printf("Segunda carta de la computadora es: ");
+    if(valor2 > 10){
+        switch(valor2){
+            case 11:
+                carta2 = 'J';
+                valor2 = 10;
+                break;
+            case 12:
+                carta2 = 'Q';
+                valor2 = 10;
+                break;
+            case 13:
+                carta2 = 'K';
+                valor2 = 10;
+                break;
+            case 14:
+                carta2 = 'A';
+                bandera_AS2 =1;
+                do{
+                    printf("!Obtuviste un As!, Que valor quieres para el As 1 u 11? \n");
+                    scanf("%d", &valor_as);
+                }while(valor_as != 1 && valor_as != 11);
+                valor2 = valor_as;
+                break;
+        }
+        printf("%c\n", carta2);
+    }else{
+        printf("%d\n", valor2);
+    }
+    
+    int suma_compu = valor1 + valor2;
+    printf("La suma de la computadora es: %d \n", suma_compu);
+    
+    do{
+//        fflush(stdin);
+//        printf("\nQuieres otra carta? \n");
+//        scanf(" %c", &respuesta);
+        if (suma > suma_compu) {
+            carta_extra = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+            printf("Tu carta es: ");
+            
+            if(carta_extra > 10){
+                switch(carta_extra){
+                    case 11:
+                        carta_extra_ch = 'J';
+                        carta_extra = 10;
+                        break;
+                    case 12:
+                        carta_extra_ch = 'Q';
+                        carta_extra = 10;
+                        break;
+                    case 13:
+                        carta_extra_ch = 'K';
+                        carta_extra = 10;
+                        break;
+                    case 14:
+                        carta_extra_ch = 'A';
+                        do{
+                            printf("!Obtuviste un As!, Que valor quieres para el As 1 u 11? \n");
+                            scanf("%d", &valor_as);
+                        }while(valor_as != 1 && valor_as != 11);
+                        carta_extra = valor_as;
+                        break;
+                }
+                printf("%c\n", carta_extra_ch);
+            }else{
+                printf("%d\n", carta_extra);
+            }
+            
+            suma_compu = suma_compu + carta_extra;
+            printf("La suma de la compu es: %d \n", suma_compu);
+            
+            if(suma_compu > 21){
+                printf("!PERDIO LA COMPUTADORA!!! \n");
+                return EXIT_SUCCESS;
+            }
+            
+        } else {
+            break;
+        }
+    }while(1);
+    
+    if(suma > suma_compu ){
+        printf("!GANASTE!!! \n");
+    }else{
+        printf("!PERDISTE!!! \n");
+    }
+    
+   
     return EXIT_SUCCESS;
 }
