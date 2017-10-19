@@ -38,13 +38,21 @@ int main() {
     }
     
     
-    int min = 2;
-    int max = 14;
+    int min = 0;
+    int max = 51;
     int valor_as = 0;
     
+    int rand1 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+    int rand2 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+    int rand3 = 0;
+    
     //Obtener primeras cartas
-    int valor1 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
-    int valor2 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+    int valor1 = baraja[rand1];
+    int valor2 = baraja[rand2];
+    
+    baraja[rand1] = 0;
+    baraja[rand2] = 0;
+    
     int carta_extra = 0;
     char carta_extra_ch = ' ';
     
@@ -124,7 +132,13 @@ int main() {
         printf("\nQuieres otra carta? \n");
         scanf(" %c", &respuesta);
         if (respuesta == 's' || respuesta == 'S') {
-            carta_extra = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+            do{
+                rand3 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+            }while(baraja[rand3] == 0);
+            
+            carta_extra = baraja[rand3];
+            baraja[rand3] = 0;
+            
             printf("Tu carta es: ");
             
             if(carta_extra > 10){
@@ -160,6 +174,18 @@ int main() {
             
             if(suma > 21){
                 printf("!PERDISTE!!! \n");
+                /// temporal
+                int count = 0;
+                for(int i=0;i<52;i++){
+                    printf("%d ", baraja[i]);
+                    if(count == 12){
+                        printf("\n");
+                        count = 0;
+                        continue;
+                    }
+                    count ++ ;
+                }
+
                 return EXIT_SUCCESS;
             }
             
@@ -169,8 +195,35 @@ int main() {
     }while(1);
     
     // Juego computadora
-    valor1 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
-    valor2 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+    int flag = 1;
+    int flag2 = 1;
+    
+    rand1 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+    rand2 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+    
+    do{
+        if(baraja[rand1] != 0 && flag){
+            valor1 = baraja[rand1];
+            baraja[rand1] = 0;
+            flag = 0;
+        }else{
+            rand1 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+        }
+        
+        if(baraja[rand2] !=0 && flag2 ){
+            valor2 = baraja[rand2];
+            baraja[rand2] = 0;
+            flag2 = 0;
+        }else{
+            rand2 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+        }
+        
+    }while(flag || flag2);
+    
+    rand3 = 0;
+    
+//    valor1 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+//    valor2 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
     carta_extra = 0;
     carta_extra_ch = ' ';
 
@@ -251,7 +304,13 @@ int main() {
 //        printf("\nQuieres otra carta? \n");
 //        scanf(" %c", &respuesta);
         if (suma > suma_compu) {
-            carta_extra = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+            do{
+                rand3 = min + rand() / (RAND_MAX / (max - min + 1) + 1);
+            }while(baraja[rand3] == 0);
+            
+            carta_extra = baraja[rand3];
+            baraja[rand3] = 0;
+
             printf("Tu carta es: ");
             
             if(carta_extra > 10){
@@ -287,6 +346,18 @@ int main() {
             
             if(suma_compu > 21){
                 printf("!PERDIO LA COMPUTADORA!!! \n");
+                
+                /// temporal
+                int count = 0;
+                for(int i=0;i<52;i++){
+                    printf("%d ", baraja[i]);
+                    if(count == 12){
+                        printf("\n");
+                        count = 0;
+                        continue;
+                    }
+                    count ++ ;
+                }
                 return EXIT_SUCCESS;
             }
             
@@ -301,6 +372,17 @@ int main() {
         printf("!PERDISTE!!! \n");
     }
     
+    /// temporal
+    int count = 0;
+    for(int i=0;i<52;i++){
+        printf("%d ", baraja[i]);
+        if(count == 12){
+            printf("\n");
+            count = 0;
+            continue;
+        }
+        count ++ ;
+    }
    
     return EXIT_SUCCESS;
 }
